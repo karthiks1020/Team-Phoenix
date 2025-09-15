@@ -1,0 +1,45 @@
+{
+  "name": "AI-Powered Marketplace for Local Artisans",
+  "version": "1.0.0-hackathon",
+  "description": "Revolutionary marketplace using AI to empower artisans",
+  "features": [
+    "CNN classification with transfer learning",
+    "Advanced data augmentation (20x dataset)",
+    "Synthetic data generation",
+    "AR product visualization",
+    "Smart recommendations",
+    "Cultural heritage preservation",
+    "Sustainability tracking",
+    "AI storytelling engine",
+    "Multi-language support",
+    "Voice & image search"
+  ],
+  "tech_stack": {
+    "backend": [
+      "Flask",
+      "PyTorch",
+      "TensorFlow",
+      "SQLite"
+    ],
+    "frontend": [
+      "React",
+      "Material-UI",
+      "WebRTC",
+      "WebXR"
+    ],
+    "ai_ml": [
+      "CNN",
+      "Transfer Learning",
+      "NLP",
+      "Computer Vision"
+    ]
+  },
+  "performance": {
+    "expected_accuracy": "90-95%",
+    "dataset_improvement": "20x original size",
+    "training_time": "< 3 hours",
+    "response_time": "< 200ms"
+  },
+  "setup_date": "2025-08-25 15:01:25.474130",
+  "ready_for_demo": true
+}

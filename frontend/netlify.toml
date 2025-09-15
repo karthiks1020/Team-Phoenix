@@ -1,0 +1,16 @@
+[build]
+  publish = "build"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+  REACT_APP_API_BASE_URL = "https://artisans-hub-backend.railway.app"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production.environment]
+  REACT_APP_API_BASE_URL = "https://artisans-hub-backend.railway.app"
+  GENERATE_SOURCEMAP = "false"
