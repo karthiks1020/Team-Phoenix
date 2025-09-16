@@ -10,6 +10,7 @@ import AboutPage from './pages/AboutPage';
 import CategoryPage from './pages/CategoryPage';
 import SearchResults from './pages/SearchResults';
 import AuthPage from './pages/AuthPage';
+import SettingsPage from './pages/SettingsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -142,6 +143,21 @@ function App() {
                 >
                   <CategoryPage />
                 </motion.div>
+              } 
+            />
+            <Route 
+              path="/settings" 
+              element={
+                <ProtectedRoute>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <SettingsPage />
+                  </motion.div>
+                </ProtectedRoute>
               } 
             />
           </Routes>

@@ -167,6 +167,15 @@ const HomePage = () => {
               >
                 ℹ️ About
               </motion.button>
+              
+              <motion.button
+                onClick={() => navigate('/settings')}
+                className="w-full text-left p-4 rounded-lg bg-gradient-to-r from-gray-500 to-slate-500 text-white font-semibold hover:from-gray-600 hover:to-slate-600 transition-all duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                ⚙️ Settings
+              </motion.button>
             </div>
           </motion.div>
         </nav>
