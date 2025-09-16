@@ -16,7 +16,7 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/ArtisansHub">
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <AnimatePresence mode="wait">
           <Routes>
