@@ -575,6 +575,29 @@ def clear_all_products():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/reset-database', methods=['POST'])
+def reset_database():
+    """Reset database to fresh marketplace state - keep sellers but remove all products"""
+    try:
+        # Delete all products
+        Product.query.delete()
+        db.session.commit()
+        
+        # Get counts
+        seller_count = Seller.query.count()
+        product_count = Product.query.count()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Database reset to fresh marketplace state!',
+            'sellers_count': seller_count,
+            'products_count': product_count,
+            'status': 'Fresh marketplace - sellers registered but no products uploaded yet'
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     """Serve uploaded images"""
