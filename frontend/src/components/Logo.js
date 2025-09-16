@@ -7,6 +7,7 @@ const Logo = ({
   variant = "default" // "default", "white", "dark"
 }) => {
   const [imageError, setImageError] = useState(false);
+  const [logoSrc, setLogoSrc] = useState('/logo.png'); // Try PNG first
 
   const getStyles = () => {
     const baseStyle = {
@@ -32,8 +33,19 @@ const Logo = ({
   };
 
   const handleImageError = () => {
-    console.warn('Logo image not found, using text fallback');
-    setImageError(true);
+    if (logoSrc === '/logo.png') {
+      // Try JPG fallback
+      console.warn('Logo PNG not found, trying JPG fallback');
+      setLogoSrc('/logo.jpg');
+    } else if (logoSrc === '/logo.jpg') {
+      // Try SVG fallback
+      console.warn('Logo JPG not found, trying SVG fallback');
+      setLogoSrc('/logo.svg');
+    } else {
+      // Final fallback to text
+      console.warn('Logo images not found, using text fallback');
+      setImageError(true);
+    }
   };
 
   // If image failed to load, show text logo as fallback
@@ -59,7 +71,7 @@ const Logo = ({
 
   return (
     <img 
-      src="/logo.svg" 
+      src={logoSrc}
       alt="Artisans Hub Logo" 
       style={getStyles()}
       className={`logo ${className}`}

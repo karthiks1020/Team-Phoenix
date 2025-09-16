@@ -40,9 +40,15 @@ Same machine: http://localhost:3000/ArtisansHub
 🌟 APPLICATION FEATURES
 ==========================================
 
+✅ **GITHUB PAGES DEPLOYMENT UPDATED!**
+
+🌐 **Live Website:** https://p-sav06.github.io/ArtisansHub/
+🔄 **Deployment Status:** Automated via GitHub Actions
+⚡ **Build Process:** Optimized for production
+
 ✅ **BOTH SERVERS ARE RUNNING AND OPERATIONAL!**
 
-🌐 **UPDATED ACCESS LINKS:**
+🏠 **LOCAL ACCESS LINKS:**
 - **Frontend:** http://localhost:3000/ArtisansHub
 - **Backend:** http://localhost:5000
 - **Network Access:** http://192.168.1.105:3000/ArtisansHub
