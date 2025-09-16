@@ -1,40 +1,44 @@
-name: Deploy to GitHub Pages
+name: Deploy Artisans Hub to GitHub Pages
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+    - name: 🔄 Checkout Repository
+      uses: actions/checkout@v4
       
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
+    - name: 🔧 Setup Node.js 18
+      uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
         cache-dependency-path: frontend/package-lock.json
         
-    - name: Install dependencies
+    - name: 📦 Install Dependencies
       run: |
         cd frontend
-        npm ci
+        npm ci --production=false
         
-    - name: Build React app
+    - name: 🏗️ Build React Application
       run: |
         cd frontend
         npm run build
+      env:
+        CI: false
+        GENERATE_SOURCEMAP: false
         
-    - name: Deploy to GitHub Pages
+    - name: 🚀 Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./frontend/build
-        cname: artisans-hub.yourdomain.com # Optional: Add your custom domain
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: 'Deploy Artisans Hub v${{ github.run_number }}'
