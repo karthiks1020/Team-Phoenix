@@ -1,0 +1,11 @@
+{
+  "files": {
+    "main.css": "/ArtisansHub/static/css/main.55f0ff1c.css",
+    "main.js": "/ArtisansHub/static/js/main.1f6681ee.js",
+    "index.html": "/ArtisansHub/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.55f0ff1c.css",
+    "static/js/main.1f6681ee.js"
+  ]
+}
