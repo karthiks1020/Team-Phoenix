@@ -79,7 +79,7 @@ const HomePage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Logo width="140" height="45" className="hover:opacity-90 transition-opacity" />
+                  <Logo width="160" height="50" className="hover:opacity-90 transition-opacity" />
                 </motion.button>
               </div>
 

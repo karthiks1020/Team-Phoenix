@@ -7,13 +7,15 @@ const Logo = ({
   variant = "default" // "default", "white", "dark"
 }) => {
   const [imageError, setImageError] = useState(false);
-  const [logoSrc, setLogoSrc] = useState('/logo.png?v=' + Date.now()); // Try PNG first with cache busting
+  const [logoSrc, setLogoSrc] = useState('/logo.png?v=' + new Date().getTime()); // Fresh cache busting
 
   const getStyles = () => {
     const baseStyle = {
       width: width + 'px',
       height: height + 'px',
-      objectFit: 'contain'
+      objectFit: 'contain',
+      maxWidth: '100%',
+      display: 'block'
     };
 
     switch (variant) {
