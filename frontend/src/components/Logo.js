@@ -7,7 +7,7 @@ const Logo = ({
   variant = "default" // "default", "white", "dark"
 }) => {
   const [imageError, setImageError] = useState(false);
-  const [logoSrc, setLogoSrc] = useState('/logo.png?v=' + new Date().getTime()); // Fresh cache busting
+  const [logoSrc, setLogoSrc] = useState('/logo.png?v=' + new Date().getTime()); // Use your logo file
 
   const getStyles = () => {
     const baseStyle = {
