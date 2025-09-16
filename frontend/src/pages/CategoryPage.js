@@ -266,41 +266,41 @@ const CategoryPage = () => {
           animate={{ opacity: 1 }}
         >
           <div className="bg-white rounded-2xl shadow-xl p-12">
-            <div className="text-6xl mb-6">🎨</div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">No Products Available Yet</h3>
+            <div className="text-6xl mb-6">🎆</div>
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Sellers Yet to Upload!</h3>
             <p className="text-gray-600 mb-8">
-              This category is ready for amazing {currentCategory.name.toLowerCase()} creations! 
-              Be the first artisan to showcase your beautiful handcrafted pieces in this category.
+              Our talented artisans are preparing their amazing {currentCategory.name.toLowerCase()} creations! 
+              As this is a new marketplace, sellers are in the process of uploading their beautiful handcrafted pieces.
             </p>
             <div className="bg-blue-50 p-6 rounded-xl mb-8">
-              <h4 className="font-semibold text-blue-800 mb-2">✨ Perfect for {currentCategory.name}:</h4>
+              <h4 className="font-semibold text-blue-800 mb-2">📝 Coming Soon in {currentCategory.name}:</h4>
               <div className="text-blue-700 space-y-1">
                 {currentCategory.name === 'Wooden Dolls' && (
                   <>
-                    <p>• Traditional carved figurines</p>
-                    <p>• Decorative wooden art</p>
+                    <p>• Traditional Rajasthani wooden figurines</p>
+                    <p>• Hand-carved decorative dolls</p>
                     <p>• Cultural heritage pieces</p>
                   </>
                 )}
                 {currentCategory.name === 'Handlooms' && (
                   <>
-                    <p>• Traditional textiles</p>
-                    <p>• Handwoven fabrics</p>
-                    <p>• Regional patterns</p>
+                    <p>• Traditional Indian textiles</p>
+                    <p>• Handwoven sarees and fabrics</p>
+                    <p>• Regional weaving patterns</p>
                   </>
                 )}
                 {currentCategory.name === 'Basket Weaving' && (
                   <>
-                    <p>• Natural fiber crafts</p>
-                    <p>• Functional baskets</p>
-                    <p>• Traditional techniques</p>
+                    <p>• Natural fiber baskets</p>
+                    <p>• Eco-friendly storage solutions</p>
+                    <p>• Traditional weaving techniques</p>
                   </>
                 )}
                 {currentCategory.name === 'Pottery' && (
                   <>
-                    <p>• Ceramic artworks</p>
-                    <p>• Traditional pottery</p>
-                    <p>• Functional pieces</p>
+                    <p>• Hand-thrown ceramic pieces</p>
+                    <p>• Traditional glazed pottery</p>
+                    <p>• Functional and decorative items</p>
                   </>
                 )}
               </div>
@@ -310,7 +310,7 @@ const CategoryPage = () => {
                 onClick={() => navigate('/sell')}
                 className={`px-8 py-3 bg-gradient-to-r ${currentCategory.color} text-white rounded-full hover:scale-105 transition-all duration-200 font-semibold mr-4`}
               >
-                🎨 List Your Product
+                🎨 Be the First to Sell
               </button>
               <button
                 onClick={() => navigate('/')}

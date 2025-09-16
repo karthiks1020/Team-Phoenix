@@ -558,6 +558,23 @@ def chatbot():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/clear-products', methods=['DELETE'])
+def clear_all_products():
+    """Clear all products from database - for new marketplace state"""
+    try:
+        # Delete all products
+        Product.query.delete()
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'All products cleared successfully!',
+            'products_remaining': Product.query.count()
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     """Serve uploaded images"""
@@ -628,8 +645,12 @@ def get_user_statistics():
 def initialize_sample_data():
     """Initialize empty database for new marketplace"""
     # Check if data already exists
-    if Product.query.first():
+    if Seller.query.first():
         return  # Data already exists
+    
+    # Clear any existing products to ensure empty marketplace
+    Product.query.delete()
+    db.session.commit()
     
     # Keep sellers data but no products - showing that sellers exist but haven't uploaded yet
     sample_sellers = [
