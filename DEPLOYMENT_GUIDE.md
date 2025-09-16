@@ -1,10 +1,10 @@
 # 🚀 Artisans Hub - GitHub Deployment
 
 ## Live Website
-🌐 **https://karthiks1020.github.io/Team-Phoenix/**
+🌐 **https://p-sav06.github.io/ArtisansHub/**
 
 ## Deployment Status
-[![Deploy Status](https://github.com/karthiks1020/Team-Phoenix/actions/workflows/deploy.yml/badge.svg)](https://github.com/karthiks1020/Team-Phoenix/actions/workflows/deploy.yml)
+[![Deploy Status](https://github.com/P-SAV06/ArtisansHub/actions/workflows/deploy.yml/badge.svg)](https://github.com/P-SAV06/ArtisansHub/actions/workflows/deploy.yml)
 
 ## Architecture
 - **Frontend**: GitHub Pages (React build)
@@ -31,7 +31,7 @@
 # Push changes to deploy
 git add .
 git commit -m "Update"
-git push origin main
+git push artisans-hub main
 # Live in ~2-3 minutes
 ```
 
@@ -44,4 +44,4 @@ cd frontend && npm start
 cd backend && python app.py
 ```
 
-Visit: **https://karthiks1020.github.io/Team-Phoenix/**
+Visit: **https://p-sav06.github.io/ArtisansHub/**
