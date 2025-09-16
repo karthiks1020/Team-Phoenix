@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: 🔄 Checkout Repository
@@ -42,16 +42,23 @@ jobs:
         env:
           CI: false
           GENERATE_SOURCEMAP: false
+          PUBLIC_URL: /ArtisansHub
           
       - name: 📋 Setup Pages
         uses: actions/configure-pages@v4
-        id: pages
         
-      - name: 📤 Upload to GitHub Pages
+      - name: 📤 Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./frontend/build
-          
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v3
