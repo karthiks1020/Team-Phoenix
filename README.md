@@ -1,4 +1,10 @@
-# 🎨 AI-Powered Marketplace Assistant for Local Artisans
+# 🎨 Artisans Hub - AI-Powered Handicraft Marketplace
+
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://artisans-hub.netlify.app/)
+[![Backend API](https://img.shields.io/badge/API-Railway-purple)](https://artisans-hub-backend.railway.app/)
+[![React](https://img.shields.io/badge/React-18.2.0-blue)](https://reactjs.org/)
+[![Flask](https://img.shields.io/badge/Flask-2.3.3-green)](https://flask.palletsprojects.com/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-Latest-red)](https://pytorch.org/)
 
 A revolutionary platform that empowers local artisans with AI-driven tools to showcase, sell, and promote their unique handicrafts.
 
@@ -45,7 +51,43 @@ artisan-marketplace/
 └── tests/                    # Test suites
 ```
 
-## 🚀 Quick Start
+## 🌍 GitHub Hosting & Deployment
+
+### Option 1: GitHub Pages (Frontend Only)
+1. Fork this repository
+2. Go to repository Settings > Pages
+3. Select `gh-pages` branch as source
+4. Your site will be available at `https://yourusername.github.io/artisans-hub`
+
+### Option 2: Full Stack Deployment
+
+#### Automated Cloud Deployment
+
+**Windows:**
+```bash
+.\deploy.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+#### Manual Cloud Deployment
+
+**Backend (Railway):**
+1. Install Railway CLI: `npm install -g @railway/cli`
+2. Login: `railway login`
+3. Create project: `railway project new`
+4. Deploy: `railway up`
+
+**Frontend (Netlify):**
+1. Build: `cd frontend && npm run build`
+2. Deploy the `build` folder to Netlify
+3. Update environment variables with your backend URL
+
+### Option 3: Local Development
 
 1. **Setup Environment**:
    ```bash

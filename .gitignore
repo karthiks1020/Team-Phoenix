@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Production build
+frontend/build/
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# Database
+*.db
+*.sqlite3
+artisans_hub.db
+
+# AI Models
+models/*.pth
+models/*.pt
+*.pth
+*.pt
+
+# Uploads
+uploads/
+backend/uploads/
+
+# Logs
+*.log
+logs/
+
+# Cache
+.cache/
+frontend/.cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
