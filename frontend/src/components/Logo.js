@@ -7,7 +7,7 @@ const Logo = ({
   variant = "default" // "default", "white", "dark"
 }) => {
   const [imageError, setImageError] = useState(false);
-  const [logoSrc, setLogoSrc] = useState('/logo.png'); // Try PNG first
+  const [logoSrc, setLogoSrc] = useState('/logo.png?v=' + Date.now()); // Try PNG first with cache busting
 
   const getStyles = () => {
     const baseStyle = {
@@ -33,14 +33,14 @@ const Logo = ({
   };
 
   const handleImageError = () => {
-    if (logoSrc === '/logo.png') {
+    if (logoSrc.includes('/logo.png')) {
       // Try JPG fallback
       console.warn('Logo PNG not found, trying JPG fallback');
-      setLogoSrc('/logo.jpg');
-    } else if (logoSrc === '/logo.jpg') {
+      setLogoSrc('/logo.jpg?v=' + Date.now());
+    } else if (logoSrc.includes('/logo.jpg')) {
       // Try SVG fallback
       console.warn('Logo JPG not found, trying SVG fallback');
-      setLogoSrc('/logo.svg');
+      setLogoSrc('/logo.svg?v=' + Date.now());
     } else {
       // Final fallback to text
       console.warn('Logo images not found, using text fallback');
