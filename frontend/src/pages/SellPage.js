@@ -7,7 +7,7 @@ import { formatINRPrice } from '../utils/indianLocalization';
 import Logo from '../components/Logo';
 
 const SellPage = () => {
-  const [step, setStep] = useState(1); // 1: Upload, 2: AI Processing, 3: Details Form
+  const [step, setStep] = useState(1);
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -29,7 +29,6 @@ const SellPage = () => {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  // Handle file upload from gallery
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -40,7 +39,6 @@ const SellPage = () => {
     }
   };
 
-  // Handle camera capture
   const captureImage = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc) {
@@ -51,17 +49,14 @@ const SellPage = () => {
     }
   };
 
-  // Generate AI description and price
   const generateAIDescription = async () => {
     setIsProcessing(true);
     try {
       let imageData;
       
       if (typeof selectedImage === 'string') {
-        // Camera captured image (base64)
         imageData = selectedImage;
       } else {
-        // File upload - convert to base64
         imageData = await fileToBase64(selectedImage);
       }
 
@@ -79,17 +74,15 @@ const SellPage = () => {
         }));
         setStep(3);
       } else {
-        alert('Failed to analyze image. Please try again.');
+        alert(response.data.message || 'Failed to analyze image.');
       }
     } catch (error) {
-      console.error('Error analyzing image:', error);
-      alert('Error analyzing image. Please check your connection and try again.');
+      alert('An error occurred while analyzing the image.');
     } finally {
       setIsProcessing(false);
     }
   };
 
-  // Convert file to base64
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -99,29 +92,18 @@ const SellPage = () => {
     });
   };
 
-  // Handle editing AI-generated content
   const handleDescriptionEdit = () => {
-    if (isEditingDescription) {
-      // Save the edited description
-      setIsEditingDescription(false);
-    } else {
-      setIsEditingDescription(true);
-    }
+    setIsEditingDescription(!isEditingDescription);
   };
 
   const handlePriceEdit = () => {
     if (isEditingPrice) {
-      // Save the edited price and update seller details
       setSellerDetails(prev => ({ ...prev, price: editablePrice }));
-      setIsEditingPrice(false);
-    } else {
-      setIsEditingPrice(true);
     }
+    setIsEditingPrice(!isEditingPrice);
   };
 
-  // Handle seller details form submission
   const handleSubmitListing = async () => {
-    // Validate form
     if (!sellerDetails.name || !sellerDetails.mobile || !sellerDetails.location || !sellerDetails.price) {
       alert('Please fill in all required fields.');
       return;
@@ -134,7 +116,7 @@ const SellPage = () => {
         seller_mobile: sellerDetails.mobile,
         seller_location: sellerDetails.location,
         category: aiResult.analysis.predicted_category,
-        description: editableDescription, // Use edited description
+        description: editableDescription,
         price: parseFloat(sellerDetails.price),
         image_filename: aiResult.image_filename,
         ai_generated: true
@@ -144,11 +126,10 @@ const SellPage = () => {
         alert('Your listing has been created successfully!');
         navigate('/');
       } else {
-        alert('Failed to create listing. Please try again.');
+        alert(response.data.message || 'Failed to create listing.');
       }
     } catch (error) {
-      console.error('Error creating listing:', error);
-      alert('Error creating listing. Please try again.');
+      alert('An error occurred while creating the listing.');
     } finally {
       setIsSubmitting(false);
     }
@@ -156,16 +137,15 @@ const SellPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-teal-50">
-      {/* Header */}
       <header className="bg-white/80 backdrop-blur-md shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate(-1)}
               className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
             >
               <span className="text-xl">←</span>
-              <span>Back to Home</span>
+              <span>Back</span>
             </button>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
               <Logo width="140" height="45" variant="white" className="inline-block" />
@@ -176,7 +156,6 @@ const SellPage = () => {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 py-8">
-        {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center justify-center space-x-8">
             {[1, 2, 3].map((stepNum) => (
@@ -203,7 +182,6 @@ const SellPage = () => {
           </div>
         </div>
 
-        {/* Step 1: Image Upload */}
         {step === 1 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -211,9 +189,7 @@ const SellPage = () => {
             className="text-center"
           >
             <h2 className="text-3xl font-bold mb-8 text-gray-800">Upload Your Artwork</h2>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
-              {/* Camera Option */}
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -224,8 +200,6 @@ const SellPage = () => {
                 <h3 className="text-xl font-semibold mb-2">Use Camera</h3>
                 <p className="text-gray-600">Take a photo of your artwork</p>
               </motion.div>
-
-              {/* Gallery Option */}
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -237,7 +211,6 @@ const SellPage = () => {
                 <p className="text-gray-600">Choose from your photos</p>
               </motion.div>
             </div>
-
             <input
               ref={fileInputRef}
               type="file"
@@ -248,7 +221,6 @@ const SellPage = () => {
           </motion.div>
         )}
 
-        {/* Camera Modal */}
         {showCamera && (
           <div className="fixed inset-0 bg-black/75 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-2xl max-w-md mx-4">
@@ -278,7 +250,6 @@ const SellPage = () => {
           </div>
         )}
 
-        {/* Step 2: AI Processing */}
         {step === 2 && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -286,7 +257,6 @@ const SellPage = () => {
             className="text-center"
           >
             <h2 className="text-3xl font-bold mb-8 text-gray-800">Review Your Image</h2>
-            
             <div className="max-w-md mx-auto mb-8">
               <img
                 src={previewUrl}
@@ -294,29 +264,35 @@ const SellPage = () => {
                 className="w-full h-64 object-cover rounded-2xl shadow-lg"
               />
             </div>
-
-            <button
-              onClick={generateAIDescription}
-              disabled={isProcessing}
-              className={`px-8 py-4 rounded-2xl font-semibold text-white transition-all duration-300 transform hover:scale-105 ${
-                isProcessing
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 shadow-lg'
-              }`}
-            >
-              {isProcessing ? (
-                <div className="flex items-center space-x-2">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Analyzing with AI...</span>
-                </div>
-              ) : (
-                <span>🤖 Generate AI Description & Price</span>
-              )}
-            </button>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={() => setStep(1)}
+                className="px-8 py-4 rounded-2xl font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 transition-all duration-300"
+              >
+                Back
+              </button>
+              <button
+                onClick={generateAIDescription}
+                disabled={isProcessing}
+                className={`px-8 py-4 rounded-2xl font-semibold text-white transition-all duration-300 transform hover:scale-105 ${
+                  isProcessing
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 shadow-lg'
+                }`}
+              >
+                {isProcessing ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Analyzing with AI...</span>
+                  </div>
+                ) : (
+                  <span>🤖 Generate AI Description & Price</span>
+                )}
+              </button>
+            </div>
           </motion.div>
         )}
 
-        {/* Step 3: Seller Details Form */}
         {step === 3 && aiResult && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -325,10 +301,8 @@ const SellPage = () => {
           >
             <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Complete Your Listing</h2>
             
-            {/* AI Results */}
             <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
               <h3 className="text-xl font-semibold mb-4 text-gray-800">🤖 AI Analysis Results</h3>
-              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <img
@@ -337,13 +311,11 @@ const SellPage = () => {
                     className="w-full h-48 object-cover rounded-lg"
                   />
                 </div>
-                
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm font-medium text-gray-600">Detected Category</label>
                     <p className="text-lg font-semibold text-green-600">{aiResult.analysis.predicted_category}</p>
                   </div>
-                  
                   <div>
                     <label className="text-sm font-medium text-gray-600">Suggested Price</label>
                     <div className="flex items-center space-x-2">
@@ -352,9 +324,8 @@ const SellPage = () => {
                           type="number"
                           value={editablePrice}
                           onChange={(e) => setEditablePrice(e.target.value)}
-                          className="text-xl font-bold text-green-600 border border-gray-300 rounded px-2 py-1 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                          className="text-xl font-bold text-green-600 border border-gray-300 rounded px-2 py-1"
                           min="1"
-                          step="0.01"
                         />
                       ) : (
                         <p className="text-xl font-bold text-green-600">{formatINRPrice(editablePrice, false)}</p>
@@ -362,7 +333,6 @@ const SellPage = () => {
                       <button
                         onClick={handlePriceEdit}
                         className="text-blue-600 hover:text-blue-800 transition-colors"
-                        title={isEditingPrice ? 'Save price' : 'Edit price'}
                       >
                         {isEditingPrice ? '✓' : '✎️'}
                       </button>
@@ -370,30 +340,22 @@ const SellPage = () => {
                   </div>
                 </div>
               </div>
-              
               <div className="mt-4">
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-sm font-medium text-gray-600">AI Generated Description</label>
-                  <div className="flex items-center space-x-2">
-                    {editableDescription !== aiResult.ai_description && (
-                      <span className="text-xs text-blue-600 font-medium">Modified</span>
-                    )}
-                    <button
-                      onClick={handleDescriptionEdit}
-                      className="text-blue-600 hover:text-blue-800 transition-colors px-2 py-1 rounded"
-                      title={isEditingDescription ? 'Save description' : 'Edit description'}
-                    >
-                      {isEditingDescription ? '✓ Save' : '✎️ Edit'}
-                    </button>
-                  </div>
+                  <button
+                    onClick={handleDescriptionEdit}
+                    className="text-blue-600 hover:text-blue-800 transition-colors px-2 py-1 rounded"
+                  >
+                    {isEditingDescription ? '✓ Save' : '✎️ Edit'}
+                  </button>
                 </div>
                 {isEditingDescription ? (
                   <textarea
                     value={editableDescription}
                     onChange={(e) => setEditableDescription(e.target.value)}
-                    className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full p-4 border border-gray-300 rounded-lg"
                     rows="4"
-                    placeholder="Edit the description..."
                   />
                 ) : (
                   <p className="mt-2 p-4 bg-gray-50 rounded-lg text-gray-800">{editableDescription}</p>
@@ -401,10 +363,8 @@ const SellPage = () => {
               </div>
             </div>
 
-            {/* Seller Details Form */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="text-xl font-semibold mb-6 text-gray-800">📝 Your Details</h3>
-              
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
@@ -412,72 +372,73 @@ const SellPage = () => {
                     type="text"
                     value={sellerDetails.name}
                     onChange={(e) => setSellerDetails(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                     placeholder="Enter your full name"
                   />
                 </div>
-                
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number *</label>
                   <input
                     type="tel"
                     value={sellerDetails.mobile}
                     onChange={(e) => setSellerDetails(prev => ({ ...prev, mobile: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                     placeholder="Enter your mobile number"
                   />
                 </div>
-                
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
                   <input
                     type="text"
                     value={sellerDetails.location}
                     onChange={(e) => setSellerDetails(prev => ({ ...prev, location: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                     placeholder="Enter your city, state"
                   />
                 </div>
-                
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Price (INR) *</label>
                   <input
                     type="number"
                     value={sellerDetails.price}
                     onChange={(e) => setSellerDetails(prev => ({ ...prev, price: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                     placeholder="Enter your price"
                     min="1"
-                    step="0.01"
                   />
                   <p className="mt-1 text-sm text-gray-500">
                     AI suggested: {formatINRPrice(aiResult.pricing_suggestion.suggested_price, false)} 
                     (Range: {formatINRPrice(aiResult.pricing_suggestion.min_price, false)} - {formatINRPrice(aiResult.pricing_suggestion.max_price, false)})
-                    {editablePrice !== aiResult.pricing_suggestion.suggested_price && (
-                      <span className="text-blue-600 font-medium"> • Modified from AI suggestion</span>
-                    )}
                   </p>
                 </div>
               </div>
               
-              <button
-                onClick={handleSubmitListing}
-                disabled={isSubmitting}
-                className={`w-full mt-8 py-4 rounded-2xl font-semibold text-white transition-all duration-300 ${
-                  isSubmitting
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 shadow-lg transform hover:scale-105'
-                }`}
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Creating Listing...</span>
-                  </div>
-                ) : (
-                  <span>🚀 Create Listing</span>
-                )}
-              </button>
+              <div className="flex justify-center space-x-4 mt-8">
+                <button
+                  onClick={() => setStep(2)}
+                  className="px-8 py-4 rounded-2xl font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handleSubmitListing}
+                  disabled={isSubmitting}
+                  className={`w-full py-4 rounded-2xl font-semibold text-white transition-all duration-300 ${
+                    isSubmitting
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 shadow-lg'
+                  }`}
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Creating Listing...</span>
+                    </div>
+                  ) : (
+                    <span>🚀 Create Listing</span>
+                  )}
+                </button>
+              </div>
             </div>
           </motion.div>
         )}

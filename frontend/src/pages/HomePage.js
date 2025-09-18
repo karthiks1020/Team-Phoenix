@@ -65,7 +65,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-x-hidden">
       {/* Header with Navigation */}
       <header className="relative z-50">
         <nav className="bg-white/80 backdrop-blur-md shadow-lg">

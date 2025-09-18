@@ -19,7 +19,7 @@ const ProfilePage = () => {
   const [userInfo, setUserInfo] = useState({
     name: '',
     email: '',
-    phone: '+91 (555) 123-4567',
+    phone: '',
     location: 'India',
     memberSince: 'January 2024'
   });
@@ -34,28 +34,60 @@ const ProfilePage = () => {
   };
 
   const savePrivacySettings = () => {
-    // In a real app, this would save to backend
     localStorage.setItem('privacySettings', JSON.stringify(privacySettings));
     alert('Privacy settings saved successfully!');
     setShowPrivacyModal(false);
   };
 
+  // FIX: Function to handle saving profile changes to localStorage and update UI
+  const handleSaveChanges = () => {
+    try {
+      const authData = localStorage.getItem('artisansHubAuth');
+      if (authData) {
+        const auth = JSON.parse(authData);
+        const updatedUser = {
+          ...auth.user,
+          name: userInfo.name,
+          email: userInfo.email,
+          phone: userInfo.phone,
+          location: userInfo.location,
+        };
+        const updatedAuth = {
+          ...auth,
+          user: updatedUser,
+          timestamp: new Date().getTime(),
+        };
+        localStorage.setItem('artisansHubAuth', JSON.stringify(updatedAuth));
+        
+        // Update both currentUser and userInfo to keep UI in sync
+        setCurrentUser(updatedUser);
+        setUserInfo(prev => ({ ...prev, ...updatedUser }));
+
+        alert('Profile information saved successfully!');
+      } else {
+        alert('Error: Could not find authentication data. Please log in again.');
+      }
+    } catch (error) {
+      console.error('Failed to save profile changes:', error);
+      alert('An error occurred while saving your profile.');
+    }
+  };
+
   useEffect(() => {
-    // Load privacy settings from localStorage
     const savedPrivacy = localStorage.getItem('privacySettings');
     if (savedPrivacy) {
       setPrivacySettings(JSON.parse(savedPrivacy));
     }
-  }, []);
 
-  useEffect(() => {
     const user = getCurrentUser();
     if (user) {
       setCurrentUser(user);
       setUserInfo(prev => ({
         ...prev,
-        name: user.name,
-        email: user.email
+        name: user.name || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        location: user.location || 'India',
       }));
     }
   }, []);
@@ -72,9 +104,7 @@ const ProfilePage = () => {
     { label: 'Wishlist Items', value: '0', icon: '❤️' }
   ];
 
-  const recentActivity = [
-    // Empty array - no activity yet as this is a new platform
-  ];
+  const recentActivity = [];
 
   const achievements = [
     { title: 'Welcome', description: 'Joined Artisans Hub platform', earned: true, icon: '🎉' },
@@ -128,7 +158,10 @@ const ProfilePage = () => {
               >
                 Logout
               </button>
-              <button className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-200">
+              <button 
+                onClick={() => setActiveTab('profile')}
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-200"
+              >
                 Edit Profile
               </button>
             </div>
@@ -225,7 +258,10 @@ const ProfilePage = () => {
                   />
                 </div>
               </div>
-              <button className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-200">
+              <button 
+                onClick={handleSaveChanges}
+                className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-600 transition-all duration-200"
+              >
                 Save Changes
               </button>
             </div>
@@ -237,8 +273,8 @@ const ProfilePage = () => {
               <h3 className="text-2xl font-bold text-gray-800 mb-6">Recent Activity</h3>
               {recentActivity.length > 0 ? (
                 <div className="space-y-4">
-                  {recentActivity.map((activity) => (
-                    <div key={activity.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                  {recentActivity.map((activity, index) => (
+                    <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                       <div className="text-2xl">{activity.icon}</div>
                       <div className="flex-1">
                         <p className="font-medium text-gray-800">{activity.action}</p>

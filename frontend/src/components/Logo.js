@@ -1,52 +1,38 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 
 const Logo = ({ 
   width = "120", 
   height = "40", 
   className = "",
-  variant = "default" // "default", "white", "dark"
+  variant = "default"
 }) => {
   const [imageError, setImageError] = useState(false);
-  const [logoSrc, setLogoSrc] = useState('/logo.jpg?v=' + new Date().getTime());
 
-  const getStyles = () => {
-    const baseStyle = {
-      width: width + 'px',
-      height: height + 'px',
-      objectFit: 'contain',
-      maxWidth: '100%',
-      display: 'block'
-    };
+  // FIX: Use process.env.PUBLIC_URL for reliable path to assets in the public folder
+  const logoJpg = `${process.env.PUBLIC_URL}/logo.jpg`;
+  const logoPng = `${process.env.PUBLIC_URL}/logo.png`;
 
-    switch (variant) {
-      case 'white':
-        return {
-          ...baseStyle,
-          filter: 'brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)'
-        };
-      case 'dark':
-        return {
-          ...baseStyle,
-          filter: 'brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%)'
-        };
-      default:
-        return baseStyle;
-    }
-  };
+  const [logoSrc, setLogoSrc] = useState(logoJpg);
+
+  useEffect(() => {
+    // Reset to JPG when component re-renders, e.g., on page navigation
+    setLogoSrc(logoJpg);
+    setImageError(false);
+  }, [logoJpg]);
 
   const handleImageError = () => {
-    if (logoSrc.includes('/logo.jpg')) {
-      // Try PNG fallback
+    if (logoSrc.includes('logo.jpg')) {
+      // If JPG fails, try PNG as a fallback
       console.warn('Logo JPG not found, trying PNG fallback');
-      setLogoSrc('/logo.png?v=' + Date.now());
+      setLogoSrc(logoPng);
     } else {
-      // Final fallback to text
-      console.warn('Logo images not found, using text fallback');
+      // If PNG also fails, show the text fallback
+      console.error('All logo images not found, using text fallback.');
       setImageError(true);
     }
   };
 
-  // If image failed to load, show text logo as fallback
   if (imageError) {
     return (
       <div className={`logo-fallback ${className}`} style={{
@@ -54,6 +40,7 @@ const Logo = ({
         height: height + 'px',
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'center',
         fontSize: '18px',
         fontWeight: 'bold',
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -71,7 +58,7 @@ const Logo = ({
     <img 
       src={logoSrc}
       alt="Artisans Hub Logo" 
-      style={getStyles()}
+      style={{ width: `${width}px`, height: `${height}px`, objectFit: 'contain' }}
       className={`logo ${className}`}
       onError={handleImageError}
     />

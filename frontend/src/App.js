@@ -20,8 +20,8 @@ function App() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <AnimatePresence mode="wait">
           <Routes>
-            <Route 
-              path="/" 
+            <Route
+              path="/"
               element={
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -31,10 +31,10 @@ function App() {
                 >
                   <HomePage />
                 </motion.div>
-              } 
+              }
             />
-            <Route 
-              path="/sell" 
+            <Route
+              path="/sell"
               element={
                 <ProtectedRoute>
                   <motion.div
@@ -46,10 +46,10 @@ function App() {
                     <SellPage />
                   </motion.div>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/chatbot" 
+            <Route
+              path="/chatbot"
               element={
                 <ProtectedRoute>
                   <motion.div
@@ -61,10 +61,10 @@ function App() {
                     <ChatbotPage />
                   </motion.div>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/profile" 
+            <Route
+              path="/profile"
               element={
                 <ProtectedRoute>
                   <motion.div
@@ -76,10 +76,10 @@ function App() {
                     <ProfilePage />
                   </motion.div>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/cart" 
+            <Route
+              path="/cart"
               element={
                 <ProtectedRoute>
                   <motion.div
@@ -91,10 +91,10 @@ function App() {
                     <CartPage />
                   </motion.div>
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/about" 
+            <Route
+              path="/about"
               element={
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -104,10 +104,10 @@ function App() {
                 >
                   <AboutPage />
                 </motion.div>
-              } 
+              }
             />
-            <Route 
-              path="/auth" 
+            <Route
+              path="/auth"
               element={
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -117,10 +117,10 @@ function App() {
                 >
                   <AuthPage />
                 </motion.div>
-              } 
+              }
             />
-            <Route 
-              path="/search" 
+            <Route
+              path="/search"
               element={
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -130,10 +130,10 @@ function App() {
                 >
                   <SearchResults />
                 </motion.div>
-              } 
+              }
             />
-            <Route 
-              path="/category/:categoryName" 
+            <Route
+              path="/category/:categoryName"
               element={
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -143,10 +143,10 @@ function App() {
                 >
                   <CategoryPage />
                 </motion.div>
-              } 
+              }
             />
-            <Route 
-              path="/settings" 
+            <Route
+              path="/settings"
               element={
                 <ProtectedRoute>
                   <motion.div
@@ -158,7 +158,7 @@ function App() {
                     <SettingsPage />
                   </motion.div>
                 </ProtectedRoute>
-              } 
+              }
             />
           </Routes>
         </AnimatePresence>

@@ -40,7 +40,8 @@ const ChatbotPage = () => {
     setIsTyping(true);
 
     try {
-      const response = await axios.post('/api/chatbot', {
+      // FIX: Use the absolute URL for the backend API
+      const response = await axios.post('https://artisans-hub-backend.railway.app/api/chatbot', {
         message: inputMessage
       });
 
