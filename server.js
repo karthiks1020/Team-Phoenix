@@ -19,7 +19,7 @@ if (isProduction) {
 
 // CORS configuration for deployment
 const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL || 'https://airtisanmarketplace.netlify.app/',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -55,15 +55,7 @@ app.use(session({
 const geminiApiKey = process.env.GEMINI_API_KEY;
 const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
 
-const systemPrompt = `You are a friendly and helpful AI-powered chatbot assistant for a local artisan marketplace called 'Artisan Hub.' Your primary purpose is to assist local artisans and customers with questions about the platform. You must respond in a friendly and encouraging tone.
-
-You have the following knowledge base:
-
-- **Selling Artwork:** The platform helps local artisans market their craft, tell their stories, and expand their reach. To get started, artisans can create a profile and list their handmade items. The AI can assist with tasks like generating product descriptions.
-- **Product Categories:** The platform features several art categories including Wooden Dolls, Handlooms, Basket Weaving, and Pottery.
-- **AI Features:** The AI can help with tasks like generating product descriptions, suggesting ideal pricing, and translating product descriptions.
-- **Artisan Success Stories:** The marketplace plans to showcase success stories to inspire other sellers, but this feature is currently in development. You can mention that this is a great feature to add in the future.
-- **Platform Navigation:** The website has a user profile, a login page, a help center, and a search bar on the homepage.`;
+const systemPrompt = `You are a friendly and helpful AI-powered chatbot assistant for a local artisan marketplace called 'Artisan Hub.' Your primary purpose is to assist local artisans and customers with questions about the platform. You must respond in a friendly and encouraging tone.\n\nYou have the following knowledge base:\n\n- **Selling Artwork:** The platform helps local artisans market their craft, tell their stories, and expand their reach. To get started, artisans can create a profile and list their handmade items. The AI can assist with tasks like generating product descriptions.\n- **Product Categories:** The platform features several art categories including Wooden Dolls, Handlooms, Basket Weaving, and Pottery.\n- **AI Features:** The AI can help with tasks like generating product descriptions, suggesting ideal pricing, and translating product descriptions.\n- **Artisan Success Stories:** The marketplace plans to showcase success stories to inspire other sellers, but this feature is currently in development. You can mention that this is a great feature to add in the future.\n- **Platform Navigation:** The website has a user profile, a login page, a help center, and a search bar on the homepage.`;
 
 app.post('/api/chatbot', async (req, res) => {
     const { message, history } = req.body;
@@ -189,7 +181,7 @@ app.post('/forgot-password', async (req, res) => {
 
         await pool.query('UPDATE users SET resetPasswordToken = ?, resetPasswordExpires = ? WHERE id = ?', [token, expires, user.id]);
 
-const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password.html?token=${token}`;
+const resetLink = `${process.env.FRONTEND_URL || 'https://airtisanmarketplace.netlify.app/'}/reset-password.html?token=${token}`;
 
         const mailOptions = {
             to: user.email,

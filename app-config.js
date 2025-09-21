@@ -3,5 +3,5 @@
 // window.APP_CONFIG = { API_BASE_URL: 'https://api.yourdomain.com' };
 
 window.APP_CONFIG = {
-  API_BASE_URL: 'http://localhost:3001'
+  API_BASE_URL: 'https://team-phoenix-swart.vercel.app/'
 };
