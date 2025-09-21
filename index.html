@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up / Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container" id="signup-form-container">
+            <h2>Sign Up</h2>
+            <form id="signup-form">
+                <div class="input-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="signup-password" name="password" required>
+                        <span class="show-password-toggle" data-target="signup-password">Show</span>
+                    </div>
+                    <div id="password-feedback">
+                        <ul>
+                            <li id="length">At least 12 characters</li>
+                            <li id="case">A mix of uppercase and lowercase letters</li>
+                            <li id="number">At least one number</li>
+                            <li id="symbol">At least one symbol</li>
+                        </ul>
+                    </div>
+                </div>
+                <button type="submit">Sign Up</button>
+            </form>
+            <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+        </div>
+
+        <div class="form-container hidden" id="login-form-container">
+            <h2>Login</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="login-password" name="password" required>
+                        <span class="show-password-toggle" data-target="login-password">Show</span>
+                    </div>
+                </div>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+                <button type="submit">Login</button>
+            </form>
+            <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+        </div>
+    </div>
+
+    <script src="app-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>Profile</h2>
+            <div id="profile-info">
+                <p><strong>Email:</strong> <span id="profile-email"></span></p>
+                <p><strong>Phone:</strong> <span id="profile-phone"></span></p>
+            </div>
+
+            <hr>
+
+            <h3>Update Phone Number</h3>
+            <form id="update-phone-form">
+                <div class="input-group">
+                    <label for="new-phone-number">New Phone Number</label>
+                    <input type="tel" id="new-phone-number" name="new-phone-number" required>
+                </div>
+                <button type="submit">Send OTP</button>
+            </form>
+
+            <form id="verify-otp-form" class="hidden">
+                <div class="input-group">
+                    <label for="otp">Enter OTP</label>
+                    <input type="text" id="otp" name="otp" required>
+                </div>
+                <button type="submit">Verify and Update</button>
+            </form>
+
+            <button id="logout-button">Logout</button>
+        </div>
+    </div>
+
+    <script src="app-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
