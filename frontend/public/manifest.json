@@ -1,0 +1,16 @@
+{
+  "short_name": "AI Marketplace",
+  "name": "AI-Powered Marketplace for Local Artisans",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#667eea",
+  "background_color": "#ffffff",
+  "description": "Revolutionary platform that empowers local artisans with AI-driven tools to showcase, sell, and promote their unique handicrafts."
+}

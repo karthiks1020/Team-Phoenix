@@ -1,0 +1,20 @@
+[build]
+  publish = "build"
+  command = "npm run build"
+
+# This is the development/local build environment.
+# I am changing this to point to your local server.
+[build.environment]
+  NODE_VERSION = "18"
+  REACT_APP_API_BASE_URL = "http://localhost:3000"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# This is the production environment for when you deploy to Netlify.
+# This remains unchanged.
+[context.production.environment]
+  REACT_APP_API_BASE_URL = "https://artisans-hub-backend.railway.app"
+  GENERATE_SOURCEMAP = "false"

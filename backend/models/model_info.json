@@ -1,0 +1,11 @@
+{
+  "accuracy": 98.03921568627452,
+  "classes": [
+    "basket_weaving",
+    "handlooms",
+    "pottery",
+    "wooden_dolls"
+  ],
+  "total_images": 255,
+  "trained_on": "user_dataset"
+}
