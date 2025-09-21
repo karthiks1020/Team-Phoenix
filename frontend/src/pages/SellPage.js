@@ -23,6 +23,7 @@ const SellPage = () => {
     location: '',
     price: ''
   });
+  const [sellerErrors, setSellerErrors] = useState({ mobile: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const webcamRef = useRef(null);
@@ -60,7 +61,8 @@ const SellPage = () => {
         imageData = await fileToBase64(selectedImage);
       }
 
-      const response = await axios.post('/api/upload-analyze', {
+      const { apiUrl } = await import('../utils/api');
+      const response = await axios.post(apiUrl('/api/upload-analyze'), {
         image: imageData
       });
 
@@ -109,16 +111,24 @@ const SellPage = () => {
       return;
     }
 
+    const mobileDigits = (sellerDetails.mobile || '').replace(/\D/g, '');
+    if (!/^\d{10}$/.test(mobileDigits)) {
+      setSellerErrors(prev => ({ ...prev, mobile: 'Enter a valid 10-digit phone number' }));
+      alert('Please enter a valid 10-digit phone number');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      const response = await axios.post('/api/create-listing', {
+      const { apiUrl } = await import('../utils/api');
+      const response = await axios.post(apiUrl('/api/create-listing'), {
         seller_name: sellerDetails.name,
-        seller_mobile: sellerDetails.mobile,
+        seller_mobile: (sellerDetails.mobile || '').replace(/\D/g, ''),
         seller_location: sellerDetails.location,
         category: aiResult.analysis.predicted_category,
         description: editableDescription,
         price: parseFloat(sellerDetails.price),
-        image_filename: aiResult.image_filename,
+        image_filename: aiResult.image_url || aiResult.image_filename,
         ai_generated: true
       });
 
@@ -380,11 +390,22 @@ const SellPage = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number *</label>
                   <input
                     type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]{10}"
+                    title="Enter 10 digits"
+                    maxLength={10}
                     value={sellerDetails.mobile}
-                    onChange={(e) => setSellerDetails(prev => ({ ...prev, mobile: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                    onChange={(e) => {
+                      const digitsOnly = e.target.value.replace(/\\D/g, '').slice(0, 10);
+                      setSellerDetails(prev => ({ ...prev, mobile: digitsOnly }));
+                      setSellerErrors(prev => ({ ...prev, mobile: digitsOnly.length === 10 ? '' : 'Enter 10 digits' }));
+                    }}
+                    className={`w-full px-4 py-3 border rounded-lg ${sellerErrors.mobile ? 'border-red-400' : 'border-gray-300'}`}
                     placeholder="Enter your mobile number"
                   />
+                  {sellerErrors.mobile && (
+                    <p className="mt-1 text-sm text-red-600">{sellerErrors.mobile}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>

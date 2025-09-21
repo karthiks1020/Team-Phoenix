@@ -47,26 +47,25 @@ const CategoryPage = () => {
   };
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const { apiUrl } = await import('../utils/api');
+        const response = await axios.get(apiUrl(`/api/products?category=${encodeURIComponent(currentCategory.name)}`));
+        if (response.data && response.data.success) {
+          setProducts(response.data.products);
+        } else {
+          setError('Failed to fetch products');
+        }
+      } catch (err) {
+        setError('Error connecting to server');
+        console.error('Error fetching products:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchProducts();
   }, [categoryName]);
-
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/products?category=${currentCategory.name}`);
-      
-      if (response.data.success) {
-        setProducts(response.data.products);
-      } else {
-        setError('Failed to fetch products');
-      }
-    } catch (err) {
-      setError('Error connecting to server');
-      console.error('Error fetching products:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleProductClick = (product) => {
     // For now, just show an alert with product details

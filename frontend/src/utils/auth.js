@@ -90,10 +90,12 @@ export const getUserGreeting = () => {
   return `${timeGreeting}, ${firstName}!`;
 };
 
-export default {
+const authUtils = {
   isAuthenticated,
   getCurrentUser,
   logout,
   requireAuth,
   getUserGreeting
 };
+
+export default authUtils;

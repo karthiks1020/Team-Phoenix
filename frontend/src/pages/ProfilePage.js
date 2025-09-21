@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { getCurrentUser, logout, getUserGreeting } from '../utils/auth';
-import Logo from '../components/Logo';
+import { getCurrentUser, logout } from '../utils/auth';
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState('profile');
-  const [currentUser, setCurrentUser] = useState(null);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [privacySettings, setPrivacySettings] = useState({
     profileVisibility: 'public', // 'public', 'friends', 'private'
@@ -21,8 +19,11 @@ const ProfilePage = () => {
     email: '',
     phone: '',
     location: 'India',
-    memberSince: 'January 2024'
+    memberSince: 'January 2024',
+    photo: ''
   });
+  const fileInputRef = React.useRef(null);
+  const [validationErrors, setValidationErrors] = useState({ phone: '' });
   
   const navigate = useNavigate();
 
@@ -42,6 +43,14 @@ const ProfilePage = () => {
   // FIX: Function to handle saving profile changes to localStorage and update UI
   const handleSaveChanges = () => {
     try {
+      // Basic phone validation: allow exactly 10 digits
+      const phoneDigits = (userInfo.phone || '').replace(/\D/g, '');
+      if (!/^\d{10}$/.test(phoneDigits)) {
+        setValidationErrors(prev => ({ ...prev, phone: 'Please enter a valid 10-digit phone number' }));
+        alert('Please enter a valid 10-digit phone number');
+        return;
+      }
+
       const authData = localStorage.getItem('artisansHubAuth');
       if (authData) {
         const auth = JSON.parse(authData);
@@ -49,8 +58,9 @@ const ProfilePage = () => {
           ...auth.user,
           name: userInfo.name,
           email: userInfo.email,
-          phone: userInfo.phone,
+          phone: phoneDigits,
           location: userInfo.location,
+          photo: userInfo.photo,
         };
         const updatedAuth = {
           ...auth,
@@ -59,8 +69,7 @@ const ProfilePage = () => {
         };
         localStorage.setItem('artisansHubAuth', JSON.stringify(updatedAuth));
         
-        // Update both currentUser and userInfo to keep UI in sync
-        setCurrentUser(updatedUser);
+        // Update userInfo to keep UI in sync (it should already be updated by form inputs)
         setUserInfo(prev => ({ ...prev, ...updatedUser }));
 
         alert('Profile information saved successfully!');
@@ -73,6 +82,14 @@ const ProfilePage = () => {
     }
   };
 
+  const formatMemberSince = (iso) => {
+    try {
+      if (!iso) return 'Unknown';
+      const d = new Date(iso);
+      return d.toLocaleString(undefined, { month: 'long', year: 'numeric' });
+    } catch { return 'Unknown'; }
+  };
+
   useEffect(() => {
     const savedPrivacy = localStorage.getItem('privacySettings');
     if (savedPrivacy) {
@@ -81,16 +98,54 @@ const ProfilePage = () => {
 
     const user = getCurrentUser();
     if (user) {
-      setCurrentUser(user);
       setUserInfo(prev => ({
         ...prev,
         name: user.name || '',
         email: user.email || '',
         phone: user.phone || '',
         location: user.location || 'India',
+        photo: user.photo || '',
+        memberSince: formatMemberSince(user.createdAt)
       }));
     }
   }, []);
+
+  const handlePickPhoto = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleRemovePhoto = () => {
+    setUserInfo(prev => ({ ...prev, photo: '' }));
+    try {
+      const authData = localStorage.getItem('artisansHubAuth');
+      if (authData) {
+        const auth = JSON.parse(authData);
+        const updatedUser = { ...auth.user, photo: '' };
+        localStorage.setItem('artisansHubAuth', JSON.stringify({ ...auth, user: updatedUser, timestamp: new Date().getTime() }));
+      }
+    } catch (e) { console.error('Failed clearing photo', e); }
+  };
+
+  const onPhotoFileChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result;
+      setUserInfo(prev => ({ ...prev, photo: dataUrl }));
+      try {
+        const authData = localStorage.getItem('artisansHubAuth');
+        if (authData) {
+          const auth = JSON.parse(authData);
+          const updatedUser = { ...auth.user, photo: dataUrl };
+          localStorage.setItem('artisansHubAuth', JSON.stringify({ ...auth, user: updatedUser, timestamp: new Date().getTime() }));
+        }
+      } catch (err) {
+        console.error('Failed to save profile photo:', err);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleLogout = () => {
     logout();
@@ -143,8 +198,41 @@ const ProfilePage = () => {
           className="bg-white rounded-2xl shadow-lg p-8 mb-8"
         >
           <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-            <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-4xl font-bold">
-              {userInfo.name.split(' ').map(n => n[0]).join('')}
+            <div className="relative">
+              {userInfo.photo ? (
+                <img
+                  src={userInfo.photo}
+                  alt="Profile"
+                  className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+                />
+              ) : (
+                <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-4xl font-bold">
+                  {userInfo.name.split(' ').map(n => n[0]).join('')}
+                </div>
+              )}
+              <button
+                onClick={handlePickPhoto}
+                className="absolute -bottom-2 -right-2 bg-blue-600 hover:bg-blue-700 text-white text-xs px-2 py-1 rounded-full shadow"
+                title="Change photo"
+              >
+                ✎
+              </button>
+              {userInfo.photo && (
+                <button
+                  onClick={handleRemovePhoto}
+                  className="absolute -bottom-2 left-0 bg-gray-600 hover:bg-gray-700 text-white text-xs px-2 py-1 rounded-full shadow"
+                  title="Remove photo"
+                >
+                  ✕
+                </button>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={onPhotoFileChange}
+                className="hidden"
+              />
             </div>
             <div className="text-center md:text-left flex-1">
               <h2 className="text-3xl font-bold text-gray-800">{userInfo.name}</h2>
@@ -243,10 +331,21 @@ const ProfilePage = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
                   <input
                     type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]{10}"
+                    title="Enter 10 digits"
+                    maxLength={10}
                     value={userInfo.phone}
-                    onChange={(e) => setUserInfo(prev => ({ ...prev, phone: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    onChange={(e) => {
+                      const digitsOnly = e.target.value.replace(/\\D/g, '').slice(0, 10);
+                      setUserInfo(prev => ({ ...prev, phone: digitsOnly }));
+                      setValidationErrors(prev => ({ ...prev, phone: digitsOnly.length === 10 ? '' : 'Enter 10 digits' }));
+                    }}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${validationErrors.phone ? 'border-red-400' : 'border-gray-300'}`}
                   />
+                  {validationErrors.phone && (
+                    <p className="mt-1 text-sm text-red-600">{validationErrors.phone}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>

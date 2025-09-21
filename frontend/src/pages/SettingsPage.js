@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Logo from '../components/Logo';
+import { ThemeLangContext } from '../context/ThemeLangContext';
+import { t } from '../utils/i18n';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -27,6 +29,8 @@ const SettingsPage = () => {
     currency: 'INR',
     theme: 'light'
   });
+
+  const { setTheme, setLanguage } = useContext(ThemeLangContext);
 
   useEffect(() => {
     // Load settings from localStorage
@@ -64,6 +68,9 @@ const SettingsPage = () => {
       ...prev,
       [key]: value
     }));
+    // Apply immediately for theme and language
+    if (key === 'theme') setTheme(value);
+    if (key === 'language') setLanguage(value);
   };
 
   const savePrivacySettings = () => {
@@ -76,6 +83,9 @@ const SettingsPage = () => {
     localStorage.setItem('privacySettings', JSON.stringify(privacySettings));
     localStorage.setItem('notificationSettings', JSON.stringify(notifications));
     localStorage.setItem('accountSettings', JSON.stringify(accountSettings));
+    // Ensure application is updated
+    setTheme(accountSettings.theme);
+    setLanguage(accountSettings.language);
     alert('All settings saved successfully!');
   };
 
@@ -125,8 +135,8 @@ const SettingsPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">⚙️ Settings</h1>
-          <p className="text-gray-600">Manage your account preferences and privacy settings</p>
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">⚙️ {t('settings.title')}</h1>
+          <p className="text-gray-600">{t('settings.subtitle')}</p>
         </motion.div>
 
         <div className="grid gap-8">
@@ -137,12 +147,12 @@ const SettingsPage = () => {
             transition={{ delay: 0.1 }}
             className="bg-white rounded-2xl shadow-lg p-8"
           >
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">🔧 Account Settings</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">🔧 {t('settings.title')}</h2>
             <div className="space-y-6">
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <h4 className="font-medium text-gray-800">Language</h4>
-                  <p className="text-sm text-gray-600">Choose your preferred language</p>
+                  <h4 className="font-medium text-gray-800">{t('settings.language')}</h4>
+                  <p className="text-sm text-gray-600">{t('settings.chooseLanguage')}</p>
                 </div>
                 <select
                   value={accountSettings.language}
@@ -156,8 +166,8 @@ const SettingsPage = () => {
 
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <h4 className="font-medium text-gray-800">Currency</h4>
-                  <p className="text-sm text-gray-600">Display prices in your preferred currency</p>
+                  <h4 className="font-medium text-gray-800">{t('settings.currency')}</h4>
+                  <p className="text-sm text-gray-600">{t('settings.currencyDesc')}</p>
                 </div>
                 <select
                   value={accountSettings.currency}
@@ -172,8 +182,8 @@ const SettingsPage = () => {
 
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <h4 className="font-medium text-gray-800">Theme</h4>
-                  <p className="text-sm text-gray-600">Choose your display theme</p>
+                  <h4 className="font-medium text-gray-800">{t('settings.theme')}</h4>
+                  <p className="text-sm text-gray-600">{t('settings.themeDesc')}</p>
                 </div>
                 <select
                   value={accountSettings.theme}
@@ -195,13 +205,13 @@ const SettingsPage = () => {
             transition={{ delay: 0.2 }}
             className="bg-white rounded-2xl shadow-lg p-8"
           >
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">🔔 Notifications</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">🔔 {t('settings.notifications')}</h2>
             <div className="space-y-4">
               {[
-                { key: 'emailNotifications', label: 'Email Notifications', description: 'Receive updates via email' },
-                { key: 'pushNotifications', label: 'Push Notifications', description: 'Get browser notifications' },
-                { key: 'orderUpdates', label: 'Order Updates', description: 'Notifications about your orders' },
-                { key: 'marketingEmails', label: 'Marketing Emails', description: 'Promotional content and offers' }
+                { key: 'emailNotifications', label: t('settings.emailNotifications'), description: 'Receive updates via email' },
+                { key: 'pushNotifications', label: t('settings.pushNotifications'), description: 'Get browser notifications' },
+                { key: 'orderUpdates', label: t('settings.orderUpdates'), description: 'Notifications about your orders' },
+                { key: 'marketingEmails', label: t('settings.marketingEmails'), description: 'Promotional content and offers' }
               ].map((setting) => (
                 <div key={setting.key} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div>
@@ -229,38 +239,38 @@ const SettingsPage = () => {
             transition={{ delay: 0.3 }}
             className="bg-white rounded-2xl shadow-lg p-8"
           >
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">🔒 Privacy & Security</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">🔒 {t('settings.privacyTitle')}</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <h4 className="font-medium text-gray-800">Profile Visibility</h4>
-                  <p className="text-sm text-gray-600">Control who can see your profile</p>
+                  <h4 className="font-medium text-gray-800">{t('settings.profileVisibility')}</h4>
+                  <p className="text-sm text-gray-600">{t('settings.chooseLanguage')}</p>
                 </div>
                 <button 
                   onClick={() => setShowPrivacyModal(true)}
                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                 >
-                  Manage
+                  {t('common.manage')}
                 </button>
               </div>
 
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <h4 className="font-medium text-gray-800">Two-Factor Authentication</h4>
-                  <p className="text-sm text-gray-600">Add extra security to your account</p>
+                  <h4 className="font-medium text-gray-800">{t('settings.twoFactor')}</h4>
+                  <p className="text-sm text-gray-600">{t('settings.addSecurity')}</p>
                 </div>
                 <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors">
-                  Enable
+                  {t('common.enable')}
                 </button>
               </div>
 
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <h4 className="font-medium text-gray-800">Data Export</h4>
-                  <p className="text-sm text-gray-600">Download your account data</p>
+                  <h4 className="font-medium text-gray-800">{t('settings.dataExport')}</h4>
+                  <p className="text-sm text-gray-600">{t('settings.downloadData')}</p>
                 </div>
                 <button className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
-                  Download
+                  {t('common.download')}
                 </button>
               </div>
             </div>
@@ -277,7 +287,7 @@ const SettingsPage = () => {
               onClick={saveAllSettings}
               className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold text-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              💾 Save All Settings
+              💾 {t('common.saveAll')}
             </button>
           </motion.div>
         </div>

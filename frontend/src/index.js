@@ -2,11 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { ThemeLangProvider } from './context/ThemeLangContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeLangProvider>
+      <App />
+    </ThemeLangProvider>
   </React.StrictMode>
 );
 

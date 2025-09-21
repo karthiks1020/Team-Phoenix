@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { INDIAN_COLORS, INDIAN_ICONS, getIndianGreeting } from '../utils/indianLocalization';
+import { INDIAN_COLORS, getIndianGreeting } from '../utils/indianLocalization';
 import Logo from '../components/Logo';
+import { ThemeLangContext } from '../context/ThemeLangContext';
+import { t } from '../utils/i18n';
 
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
-  const [greeting, setGreeting] = useState(getIndianGreeting());
+  const [greeting] = useState(getIndianGreeting());
   const navigate = useNavigate();
+  useContext(ThemeLangContext); // ensure context subscription for language changes
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -138,7 +141,7 @@ const HomePage = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                🛍️ Sell
+🛍️ {t('home.sell')}
               </motion.button>
               
               <motion.button
@@ -147,7 +150,7 @@ const HomePage = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                🛒 Add to Cart
+🛒 {t('home.addToCart')}
               </motion.button>
               
               <motion.button
@@ -156,7 +159,7 @@ const HomePage = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                🤖 My Artist Friend
+🤖 {t('home.chatbot')}
               </motion.button>
               
               <motion.button
@@ -165,7 +168,7 @@ const HomePage = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                ℹ️ About
+ℹ️ {t('home.about')}
               </motion.button>
               
               <motion.button
@@ -174,7 +177,7 @@ const HomePage = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                ⚙️ Settings
+⚙️ {t('home.settings')}
               </motion.button>
             </div>
           </motion.div>
@@ -216,7 +219,7 @@ const HomePage = () => {
               <form onSubmit={handleSearch} className="relative">
                 <input
                   type="text"
-                  placeholder="Search for handcrafted treasures..."
+placeholder={t('home.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full px-6 py-4 text-lg rounded-full border-2 border-gray-200 focus:border-purple-500 focus:outline-none shadow-lg bg-white/80 backdrop-blur-sm"

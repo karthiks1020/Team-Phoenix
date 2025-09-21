@@ -8,6 +8,7 @@ const AuthPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     password: '',
     confirmPassword: ''
   });
@@ -21,6 +22,11 @@ const AuthPage = () => {
     });
   };
 
+  const handlePhoneChange = (e) => {
+    const digitsOnly = (e.target.value || '').replace(/\D/g, '').slice(0, 10);
+    setFormData(prev => ({ ...prev, phone: digitsOnly }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -32,14 +38,38 @@ const AuthPage = () => {
       return;
     }
 
+    if (!isLogin) {
+      const phoneDigits = (formData.phone || '').replace(/\D/g, '');
+      if (!/^\d{10}$/.test(phoneDigits)) {
+        alert('Please enter a valid 10-digit phone number');
+        setLoading(false);
+        return;
+      }
+    }
+
     // Simulate API call
     setTimeout(() => {
+      // Determine createdAt for new accounts
+      const nowIso = new Date().toISOString();
+      let existing = null;
+      try {
+        const raw = localStorage.getItem('artisansHubAuth');
+        existing = raw ? JSON.parse(raw) : null;
+      } catch {}
+
+      const createdAt = !isLogin
+        ? nowIso
+        : (existing?.user?.createdAt || nowIso);
+
       // Store authentication state in localStorage
+      const phoneDigits = (formData.phone || existing?.user?.phone || '').replace(/\D/g, '').slice(0, 10);
       localStorage.setItem('artisansHubAuth', JSON.stringify({
         isAuthenticated: true,
         user: {
-          name: formData.name || 'User',
-          email: formData.email
+          name: formData.name || existing?.user?.name || 'User',
+          email: formData.email || existing?.user?.email || '',
+          phone: phoneDigits,
+          createdAt,
         },
         timestamp: new Date().getTime()
       }));
@@ -186,6 +216,33 @@ const AuthPage = () => {
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
                     placeholder="Enter your full name"
+                  />
+                </motion.div>
+              )}
+
+              {!isLogin && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="mt-2"
+                >
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Mobile Number
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    inputMode="numeric"
+                    pattern="[0-9]{10}"
+                    title="Enter 10 digits"
+                    maxLength={10}
+                    required={!isLogin}
+                    value={formData.phone}
+                    onChange={handlePhoneChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+                    placeholder="Enter 10-digit mobile number"
                   />
                 </motion.div>
               )}

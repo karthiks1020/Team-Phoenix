@@ -14,28 +14,28 @@ const SearchResults = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const searchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`http://localhost:5000/api/products?search=${encodeURIComponent(searchQuery)}`);
+        
+        if (response.data.success) {
+          setProducts(response.data.products);
+        } else {
+          setError('Failed to search products');
+        }
+      } catch (err) {
+        setError('Error connecting to server');
+        console.error('Error searching products:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (searchQuery) {
       searchProducts();
     }
   }, [searchQuery]);
-
-  const searchProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/products?search=${encodeURIComponent(searchQuery)}`);
-      
-      if (response.data.success) {
-        setProducts(response.data.products);
-      } else {
-        setError('Failed to search products');
-      }
-    } catch (err) {
-      setError('Error connecting to server');
-      console.error('Error searching products:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleProductClick = (product) => {
     alert(`Product: ${product.description.substring(0, 50)}...\nPrice: ${formatINRPrice(product.price, false)}\nArtist: ${product.seller?.name}\nLocation: ${product.seller?.location}`);

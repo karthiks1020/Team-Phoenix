@@ -22,12 +22,6 @@ export const formatINRPrice = (amount, convertFromUSD = true) => {
   const inrAmount = convertFromUSD ? convertToINR(amount) : amount;
   
   // Indian number formatting with proper comma placement
-  const formatter = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  });
   
   // Alternative format with "Rs" suffix for better Indian UX
   const formattedNumber = new Intl.NumberFormat('en-IN').format(inrAmount);
@@ -102,7 +96,7 @@ export const INDIAN_CRAFT_REGIONS = {
   'Karnataka': ['Pottery', 'Basket Weaving']
 };
 
-export default {
+const indianLocalizationUtils = {
   convertToINR,
   formatINRPrice,
   formatSimpleINR,
@@ -111,3 +105,5 @@ export default {
   getIndianGreeting,
   INDIAN_CRAFT_REGIONS
 };
+
+export default indianLocalizationUtils;

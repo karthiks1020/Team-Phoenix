@@ -3,6 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API_URL = `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000'}/api/chatbot`;
+
+
+
 const ChatbotPage = () => {
   const [messages, setMessages] = useState([
     {
@@ -40,15 +44,20 @@ const ChatbotPage = () => {
     setIsTyping(true);
 
     try {
-      // FIX: Use the absolute URL for the backend API
-      const response = await axios.post('https://artisans-hub-backend.railway.app/api/chatbot', {
-        message: inputMessage
+      const chatHistory = messages.map(msg => ({
+        role: msg.type === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }]
+      }));
+
+      const response = await axios.post(API_URL, {
+        message: userMessage.content,
+        history: chatHistory
       });
 
       const botMessage = {
         id: Date.now() + 1,
         type: 'bot',
-        content: response.data.response,
+        content: response.data.reply,
         timestamp: new Date()
       };
 
@@ -137,9 +146,7 @@ const ChatbotPage = () => {
                 }`}>
                   {/* Avatar */}
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    message.type === 'user' 
-                      ? 'bg-blue-500' 
-                      : 'bg-gradient-to-r from-pink-500 to-purple-500'
+                    message.type === 'user'  ? 'bg-blue-500'  : 'bg-gradient-to-r from-pink-500 to-purple-500'
                   }`}>
                     <span className="text-white text-sm">
                       {message.type === 'user' ? '👤' : '🤖'}
